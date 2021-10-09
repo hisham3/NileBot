@@ -9,6 +9,7 @@ from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 from lxml import etree
 from pprint import pprint
+import os
 
 class Course:
 
@@ -16,7 +17,9 @@ class Course:
         chrome_options = webdriver.ChromeOptions()
         user = UserAgent()
         chrome_options.add_argument(f'user-agent={user.random}')
-        self.browser = webdriver.Chrome(r'C:\Users\MAMDO\.wdm\drivers\chromedriver\win32\94.0.4606.61\chromedriver.exe', options=chrome_options)
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-gpu')
+        self.browser = webdriver.Chrome(os.environ.get('CHROMEDRIVER_PATH'), options=chrome_options)
 
     def log_in(self, username, password):
         self.browser.get('https://register.nu.edu.eg/PowerCampusSelfService/Registration/Courses')

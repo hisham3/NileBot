@@ -1,5 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from NileBot.script import Course
+import os
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -56,7 +57,7 @@ def cancel(update, context):
     course_class.quit()
     context.bot.send_message(chat_id=update.message.chat_id, text='session ended.')
 
-updater = Updater("2045989311:AAEwv42O-RTW2gAP85om43iHkddSZ2C2D5o")
+updater = Updater(os.environ.get('TOKEN'))
 conversation = ConversationHandler(
     entry_points=[CommandHandler('start', start)],
     states={
