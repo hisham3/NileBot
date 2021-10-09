@@ -1,5 +1,5 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from NileBot.script import Course
+from script import Course
 import os
 from telegram.ext import (
     Updater,
