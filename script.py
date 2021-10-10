@@ -54,16 +54,16 @@ class Course:
         element.send_keys(course)
         element.send_keys(Keys.ENTER)
 
-        WebDriverWait(self.browser, 10).until(
+        WebDriverWait(self.browser, 20).until(
             EC.element_to_be_clickable(
-                (By.XPATH, '//*[@id="contentPage"]/div[2]/div/div[2]/div[1]/div[3]'))
+                (By.XPATH, '//*[@id="contentPage"]/div[2]/div/div/div[1]/div[3]'))
         )
 
         r = self.browser.page_source
         soup = BeautifulSoup(r, 'html.parser')
         soup_xpath = etree.HTML(str(soup))
 
-        sessions = soup_xpath.xpath('//*[@id="contentPage"]/div[2]/div/div[2]/div[1]/div[3]/div/div/div/div/div/span[1]/text()')
+        sessions = soup_xpath.xpath('//*[@id="contentPage"]/div[2]/div/div/div[1]/div[3]/div/div/div/div/div[1]/span[1]/text()')
         seats = soup_xpath.xpath('//*[@id="contentPage"]/div[2]/div/div/div[1]/div[3]/div/div/div/div/div[2]/div/div[3]/h4/text()')
         opened = 'Registration period has' in self.browser.page_source
 

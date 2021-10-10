@@ -15,6 +15,8 @@ from telegram.ext import (
     JOB
 ) = map(str, range(0,2))
 
+last_status = {'seats':None}
+
 def start(update, context):
     context.bot.send_message(chat_id=update.message.chat_id, text='please enter input like: Username - Pass - Course')
 
@@ -36,11 +38,12 @@ def course_repeating(context):
     info = course_class.course_searching(course)
     text = [f'# {session} - {seat} Left Seats\n' for session, seat in zip(info['session'], info['seats'])]
 
-    if any(info['seats']):
+    if any(info['seats']) and last_status['seats'] != info['seats']:
         context.bot.send_message(chat_id=context.user_data['chat_id'], text=f'{course}\n{"".join(text)}\nopened: {info["opened"]}')
+        last_status.update({'seats':info['seats']})
 
-    if info['opened']:
-        context.bot.send_message(chat_id=context.user_data['chat_id'], text=f'Hiiiiiiiiiiii Registeration is Opened.\n'*10)
+    # if info['opened']:
+    #     print(f'Hiiiiiiiiiiii Registeration is Opened.\n'*10)
 
 def job(update, context):
     course_class = Course()
@@ -49,7 +52,7 @@ def job(update, context):
 
     context.user_data.update({'course_class':course_class, 'chat_id':update.callback_query.message.chat_id})
 
-    context.job_queue.run_repeating(course_repeating, interval=5, context=context)
+    context.job_queue.run_repeating(course_repeating, interval=10, context=context)
 
 def cancel(update, context):
     context.job_queue.stop()
