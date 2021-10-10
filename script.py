@@ -42,7 +42,7 @@ class Course:
 
 
     def course_searching(self, course):
-        WebDriverWait(self.browser, 10).until(
+        WebDriverWait(self.browser, 20).until(
             EC.element_to_be_clickable(
                 (By.XPATH, '//*[@id="txtSearch"]'))
         )
