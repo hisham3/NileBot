@@ -38,7 +38,7 @@ def course_repeating(context):
     info = course_class.course_searching(course)
     text = [f'# {session} - {seat} Left Seats\n' for session, seat in zip(info['session'], info['seats'])]
 
-    if any(info['seats']) and last_status['seats'] != info['seats']:
+    if last_status['seats'] != info['seats']:
         context.bot.send_message(chat_id=context.user_data['chat_id'], text=f'{course}\n{"".join(text)}\nopened: {info["opened"]}')
         last_status.update({'seats':info['seats']})
 
