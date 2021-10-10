@@ -64,9 +64,8 @@ class Course:
         soup_xpath = etree.HTML(str(soup))
 
         sessions = soup_xpath.xpath('//*[@id="contentPage"]/div[2]/div/div/div[1]/div[3]/div/div/div/div/div[1]/span[1]/text()')
-        seats = soup_xpath.xpath('//*[@id="contentPage"]/div[2]/div/div/div[1]/div[3]/div/div/div/div/div[2]/div/div[3]/h4/text()')
+        seats = soup_xpath.xpath('//*[@id="contentPage"]/div[2]/div/div/div[1]/div[3]/div/div/div/div/div[2]/div/div[3]//h4/text()')
         opened = 'Registration period has' in self.browser.page_source
-
 
         info = {
             'session': sessions,
