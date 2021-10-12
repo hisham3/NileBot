@@ -38,7 +38,7 @@ def course_repeating(context):
     info = course_class.course_searching(course)
     text = [f'# {session} - {seat} Left Seats\n' for session, seat in zip(info['session'], info['seats'])]
 
-    if last_status['seats'] != info['seats']:
+    if last_status['seats'] != info['seats'] and info['seats'] != []:
         context.bot.send_message(chat_id=context.user_data['chat_id'], text=f'{course}\n{"".join(text)}\nopened: {info["opened"]}')
         last_status.update({'seats':info['seats']})
 
@@ -67,8 +67,8 @@ conversation = ConversationHandler(
         BACK_DATA: [MessageHandler(Filters.text & (~Filters.command), message)],
         JOB: [CallbackQueryHandler(job, pass_job_queue=True)]
     },
-    fallbacks=[CommandHandler('cancel', cancel, pass_job_queue=True)]
-)
+    fallbacks=[CommandHandler('cancel', cancel, pass_job_queue=True)],
+    run_async=True)
 updater.dispatcher.add_handler(conversation)
 updater.start_polling()
 updater.idle()
