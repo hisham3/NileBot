@@ -20,6 +20,7 @@ class Course:
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
         self.browser = webdriver.Chrome(os.environ.get('CHROMEDRIVER_PATH'), options=chrome_options) #r'C:\Users\MAMDO\.wdm\drivers\chromedriver\win32\106.0.5249.21\chromedriver.exe'
+        self.courses = os.environ.get('COURSES').split(",")
 
     def log_in(self, username, password):
         self.browser.get('https://register.nu.edu.eg/PowerCampusSelfService/Registration/Courses')
@@ -63,15 +64,26 @@ class Course:
         soup = BeautifulSoup(r, 'html.parser')
         soup_xpath = etree.HTML(str(soup))
 
-        sessions = soup_xpath.xpath('//*[@id="contentPage"]/div[2]/div/div/div[1]/div[3]/div/div/div/div/div[1]/span[1]/text()')
-        seats = soup_xpath.xpath('//*[@id="contentPage"]/div[2]/div/div/div[1]/div[3]/div/div/div/div/div[2]/div/div[3]//h4/text()')
-        opened = 'Registration period has' in self.browser.page_source
-
         info = {
-            'session': sessions,
-            'seats': list(map(int, seats)),
-            'opened': False if opened else True
+            "courses": {},
+            #     "course_info": [session_seats]
+            'opened': False
         }
+
+        xpath_courses = " or ".join([f"contains(text(), '{course}')" for course in self.courses])
+        courses_objs = soup_xpath.xpath(f"//button[contains(@id,'btnTitle_sectionCard')]/span[{xpath_courses}]/../../../..")
+
+        for courses_obj in courses_objs:
+            course_name = courses_obj.xpath("div[1]/h4/button/span/text()")[0]
+            course_session = courses_obj.xpath("div[1]/span[1]/text()")[0]
+            course_seat = courses_obj.xpath("div[2]/div/div[3]//h4/text()")[0]
+
+            if info["courses"].get(course_name):
+                info["courses"][course_name].append((course_session, int(course_seat)))
+            else:
+                info["courses"][course_name] = [(course_session, int(course_seat))]
+
+        info["opened"] = 'Registration period has' not in self.browser.page_source
 
         print(info)
 

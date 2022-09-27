@@ -1,5 +1,3 @@
-import datetime
+dic = " or ".join([f"contains(text(), '{course}')" for course in ["ECEN311", "ECEN305"]])
 
-x = {'hesham':1,'ahmed':2}
-
-# 2021-12-06 19:09:46.385367
+print(dic)
